@@ -8,6 +8,10 @@ export const _api = remultSveltekit({
 	entities: [User, Article, Category]
 });
 
+export const _openApiDoc = _api.openApiDoc({
+	title: 'RST-MEI'
+});
+
 export const { GET, POST, PUT, DELETE } = _api;
 
 User.hash = (password) => hash(password, 10);

@@ -17,6 +17,7 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/bcrypt": "^5.0.2",
 		"@types/eslint": "^9.6.0",
+		"@types/swagger-ui": "^3.52.4",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -33,6 +34,6 @@
 	"type": "module",
 	"dependencies": {
 		"bcrypt": "^5.1.1",
-		"isomorphic-dompurify": "^2.16.0"
+		"swagger-ui": "^5.17.14"
 	}
 }
