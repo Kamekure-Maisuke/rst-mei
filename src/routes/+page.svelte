@@ -2,6 +2,7 @@
 	import { remult } from 'remult';
 	import { onMount } from 'svelte';
 	import { Article } from '../shared/Article';
+	import { Category } from '../shared/Category';
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import * as Table from '$lib/components/ui/table';
@@ -12,15 +13,36 @@
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import { goto } from '$app/navigation';
 
+	let allArticles: Article[] = [];
 	let articles: Article[] = [];
+	let categories: Category[] = [];
+	let selectedCategory: string = 'All';
+
 	onMount(async () => {
-		articles = await remult.repo(Article).find({
-			include: {
-				user: true,
-				category: true
-			}
-		});
+		[allArticles, categories] = await Promise.all([
+			remult.repo(Article).find({
+				include: {
+					user: true,
+					category: true
+				}
+			}),
+			remult.repo(Category).find()
+		]);
+		articles = allArticles;
 	});
+
+	const filterArticles = () => {
+		if (selectedCategory === 'All') {
+			articles = allArticles;
+		} else {
+			articles = allArticles.filter((article) => article.category?.name === selectedCategory);
+		}
+	};
+
+	const selectCategory = (category: string) => {
+		selectedCategory = category;
+		filterArticles();
+	};
 
 	const deleteArticle = async (article: Article) => {
 		await remult.repo(Article).delete(article);
@@ -62,6 +84,20 @@
 				<Card.Title tag="h2">記事一覧</Card.Title>
 			</Card.Header>
 			<Card.Content>
+				<div class="mb-4 flex space-x-2">
+					<Button
+						on:click={() => selectCategory('All')}
+						variant={selectedCategory === 'All' ? 'default' : 'secondary'}>All</Button
+					>
+					{#each categories as category}
+						<Button
+							on:click={() => selectCategory(category.name)}
+							variant={selectedCategory === category.name ? 'default' : 'secondary'}
+						>
+							{category.name}
+						</Button>
+					{/each}
+				</div>
 				<Table.Root>
 					<Table.Header>
 						<Table.Row>
