@@ -7,6 +7,7 @@
 	import * as Table from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
 	import * as Menubar from '$lib/components/ui/menubar';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	import { formatDate } from '../utils/date';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import { goto } from '$app/navigation';
@@ -81,7 +82,22 @@
 									<Button href="/articles/{article.id}" variant="outline">詳細</Button>
 								</Table.Cell>
 								<Table.Cell>
-									<Button on:click={() => deleteArticle(article)} variant="outline">削除</Button>
+									<AlertDialog.Root>
+										<AlertDialog.Trigger asChild let:builder>
+											<Button builders={[builder]} variant="outline">削除</Button>
+										</AlertDialog.Trigger>
+										<AlertDialog.Content>
+											<AlertDialog.Header>
+												<AlertDialog.Title>本当に削除しますか?</AlertDialog.Title>
+											</AlertDialog.Header>
+											<AlertDialog.Footer>
+												<AlertDialog.Cancel>キャンセル</AlertDialog.Cancel>
+												<AlertDialog.Action>
+													<Button on:click={() => deleteArticle(article)}>削除</Button>
+												</AlertDialog.Action>
+											</AlertDialog.Footer>
+										</AlertDialog.Content>
+									</AlertDialog.Root>
 								</Table.Cell>
 							</Table.Row>
 						{/each}
