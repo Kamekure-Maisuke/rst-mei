@@ -98,6 +98,11 @@
 						</Button>
 					{/each}
 				</div>
+				<div class="mb-4">
+					<Badge variant="secondary" class="text-sm">
+						{articles.length} 件
+					</Badge>
+				</div>
 				<Table.Root>
 					<Table.Header>
 						<Table.Row>

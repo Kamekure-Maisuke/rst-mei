@@ -2,6 +2,11 @@
 	import { remult } from 'remult';
 	import { onMount } from 'svelte';
 	import { Category } from '../../shared/Category';
+	import * as Card from '$lib/components/ui/card';
+	import * as Table from '$lib/components/ui/table';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
+	import { Input } from '$lib/components/ui/input';
+	import { Button } from '$lib/components/ui/button';
 
 	let categories: Category[] = [];
 
@@ -29,20 +34,62 @@
 </script>
 
 <div>
-	<h1>カテゴリ一覧</h1>
-	<a href="/">HOME</a>
 	<main>
-		<form on:submit|preventDefault={addCategory}>
-			<input bind:value={newCategoryName} placeholder="name" required />
-			<input bind:value={newCategoryDescription} placeholder="description" required />
-			<button>追加</button>
-		</form>
-
-		{#each categories as category}
-			<div>
-				<span>{category.name}</span>
-				<button on:click={() => deleteCategory(category)}>削除</button>
-			</div>
-		{/each}
+		<Card.Root class="mx-auto mt-8 w-full max-w-md">
+			<Card.Header>
+				<Card.Title tag="h2">カテゴリ一覧</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<form on:submit|preventDefault={addCategory}>
+					<div class="space-y-2">
+						<Input
+							id="title"
+							bind:value={newCategoryName}
+							placeholder="カテゴリ名を入力"
+							required
+						/>
+						<Input
+							id="title"
+							bind:value={newCategoryDescription}
+							placeholder="説明を入力"
+							required
+						/>
+					</div>
+					<Button type="submit" class="mt-2 w-full">作成</Button>
+				</form>
+				<Table.Root>
+					<Table.Header>
+						<Table.Row>
+							<Table.Head>名前</Table.Head>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{#each categories as category (category.id)}
+							<Table.Row>
+								<Table.Cell>{category.name}</Table.Cell>
+								<Table.Cell>
+									<AlertDialog.Root>
+										<AlertDialog.Trigger asChild let:builder>
+											<Button builders={[builder]} variant="outline">削除</Button>
+										</AlertDialog.Trigger>
+										<AlertDialog.Content>
+											<AlertDialog.Header>
+												<AlertDialog.Title>本当に削除しますか?</AlertDialog.Title>
+											</AlertDialog.Header>
+											<AlertDialog.Footer>
+												<AlertDialog.Cancel>キャンセル</AlertDialog.Cancel>
+												<AlertDialog.Action>
+													<Button on:click={() => deleteCategory(category)}>削除</Button>
+												</AlertDialog.Action>
+											</AlertDialog.Footer>
+										</AlertDialog.Content>
+									</AlertDialog.Root>
+								</Table.Cell>
+							</Table.Row>
+						{/each}
+					</Table.Body>
+				</Table.Root>
+			</Card.Content>
+		</Card.Root>
 	</main>
 </div>
